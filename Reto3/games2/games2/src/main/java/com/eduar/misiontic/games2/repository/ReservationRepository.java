@@ -36,7 +36,7 @@ public class ReservationRepository {
 
     public List<Reservation> getReservationsByDescription(String description){
 
-        return reservationCrudRepository.findAllByDescription(description);
+        return reservationCrudRepository.findAllByStatus(description);
 
     }
 
@@ -44,15 +44,16 @@ public class ReservationRepository {
 
         return  reservationCrudRepository.findAllByStartDateAfterAndStartDateBefore(dateOne, dateTwo);
     }
-
-    public List<CountClient> getTopClient(){
-        List<CountClient> res=new ArrayList<>();
-
-        List<Object[]> report=reservationCrudRepository.countTotalReservationByClient();
-        for(int i=0; i<report.size(); i++){
-            res.add(new CountClient((Integer) report.get(i)[1],(Client)report.get(i)[0]));
-        }
-
-        return res;
+    public List<CountClient> getTopClient() {
+    List<CountClient> countCategories = new ArrayList<>();
+    List<Object[]> report = reservationCrudRepository.countTotalReservationByClient();
+        for (int i = 0; i < report.size(); i++) {
+        Client client = (Client) report.get(i)[0];
+        Long amount = (Long) report.get(i)[1];
+        CountClient countCategory = new CountClient(amount, client);
+        countCategories.add((countCategory));
     }
+
+                return countCategories;
+   }
 }
